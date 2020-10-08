@@ -8,7 +8,7 @@ const Auth=require('../middleware/auth')
 router.get("/",Auth, async (req,res,next)=>{
 
     try {
-        if (req.cookies === undefined) {
+        if (req.cookies.token === undefined) {
             return res.redirect('/auth');
         }
         let user = await DB.getUser(req.data.username);
@@ -23,7 +23,7 @@ router.get("/",Auth, async (req,res,next)=>{
 })
 
 router.get('/logout', (req, res) => {
-    res.clearCookie('session');
+    res.clearCookie('token');
     return res.redirect('/auth');
 });
 

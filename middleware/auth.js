@@ -2,8 +2,10 @@ const jwt=require('../src/jwt');
 
 module.exports= async (req,res,next)=> {
     try{
-        if(req.cookies===undefined) return res.redirect('/auth');
+        if(req.cookies.token===undefined||req.cookies.token==="") return res.redirect('/auth');
+        console.log(req.cookies.token);
         let payload = await jwt.verify(req.cookies.token);
+        console.log("here????")
         req.data={
             username:payload.username
         }
