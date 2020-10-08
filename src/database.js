@@ -14,8 +14,7 @@ module.exports= {
     getUser(username){
         return new Promise((res,rej)=>{
             db.get(`SELECT username from users where username='${username}'`,(error,data)=>{
-                if(error) console.log(error);
-                console.log(`User: ${data}`);
+                if(error) return rej();
                 res(data)
             })
         })
@@ -23,7 +22,7 @@ module.exports= {
     checkUser(username){
         return new Promise((res, rej) => {
             db.get(`SELECT * FROM users WHERE username = ?`, username, (error, data) => {
-                if (error) return rej('checkUser');
+                if (error) return rej();
                 res(data === undefined);
             });
         });
@@ -31,7 +30,7 @@ module.exports= {
     login(username,password){
         return new Promise((res,rej)=>{
             db.get("SELECT username FROM users WHERE username=? AND password=?",username,password,(error,data)=>{
-                if(error) rej('login')
+                if(error) rej()
                 res(data!==undefined)
             })
         })
