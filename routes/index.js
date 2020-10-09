@@ -13,12 +13,12 @@ router.get("/",Auth, async (req,res,next)=>{
         }
         let user = await DB.getUser(req.data.username);
         if (user === undefined) {
-            return res.send(`user ${req.data.username} doesn't exist in our database.`);
+            return res.send(`user ${req.data.username} doesn't exist in database.`);
         }
         return res.render('index.html', { user });
     }
      catch (error) {
-        return next(error);
+        return next();
     }
 })
 
@@ -31,30 +31,30 @@ router.get('/auth', async (req, res) => {
     res.render('auth.html',{query:req.query});
 })
 
-
 router.post('/auth', async (req,res)=>{
     const { username,password }=req.body;
     if(req.body.register !== undefined){
         let checkRegister = await DB.checkUser(username);
         if (!checkRegister){
-            res.redirect('/auth?error=User already exists!')
+            return await res.redirect('/auth?error=User already exists!')
         }
-        else if(username.trim().length===0 && password.trim().length===0){
-            res.redirect('/auth')
+        else if(username.trim().length===0 || password.trim().length===0){
+            return await res.redirect('/auth')
         }
+        
         DB.createUser(username,password);
-        res.redirect('/auth?error=Successfully Registered&type=success')
+        return await res.redirect('/auth?error=Successfully Registered&type=success')
     }
-    // login
+
     let checkLogin = await DB.login(username,password);
     if(!checkLogin){
-        res.redirect('/auth?error=Invalid Username or Password')
+        return res.redirect('/auth?error=Invalid Username or Password')
     }
     let token = await jwt.sign({
         username: username.replace(/'/g, "\'\'").replace(/"/g, "\"\"")
     })
     res.cookie('token', token);
-    return res.redirect('/')
+    return await res.redirect('/');
 })
 
 module.exports = router;

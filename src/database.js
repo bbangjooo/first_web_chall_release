@@ -21,7 +21,7 @@ module.exports= {
     },
     checkUser(username){
         return new Promise((res, rej) => {
-            db.get(`SELECT * FROM users WHERE username = ?`, username, (error, data) => {
+            db.get('SELECT * FROM users WHERE username = ?', username, (error, data) => {
                 if (error) return rej();
                 res(data === undefined);
             });
